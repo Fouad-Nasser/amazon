@@ -10,9 +10,10 @@ function auth(req, res, next) {
                 res.status(401).json({ message: err.message })
             }
             else{
-                req.user = {};
-                req.user.id=decoded.userId;
-                req.user.role=decoded.userRole;
+                req.user = {
+                    id:decoded.userId,
+                    role:decoded.userRole
+                };
     
                 // console.log(req.user); 
                 next()
@@ -28,20 +29,16 @@ function auth(req, res, next) {
 }
 
 
-function userProtect(req, res, next) {
-    if (req.user.id === req.params.id || req.user.role==='admin') {
-        next()
-
-    } else {
-        res.status(401).json({error:"invalid authorization"});
-    }
-
-}
+function setUserId(req, res, next){
+    req.params.id = req.user.id;
+    console.log(req.params.id);
+    next();
+  };
 
 
 function canAccess(roles){
     return (req, res, next) => {
-    console.log('done');
+    // console.log('done');
         if (roles.includes(req.user.role)) {
             next()
     
@@ -53,4 +50,4 @@ function canAccess(roles){
 }
 
 
-module.exports = { auth, userProtect, canAccess}
+module.exports = { auth, setUserId, canAccess}

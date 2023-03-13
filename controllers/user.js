@@ -12,50 +12,54 @@ exports.getUser = factory.getOne(User);
 
 exports.createUser = factory.createOne(User);
 
+exports.updateUser = factory.updateOne(User);
+
 exports.deleteUser = factory.deleteOne(User);
 
 
-exports.updateUser = asyncHandler( async (req, res, next) => {
-    const userData = req.body;
-  
-    const user = await User.findByIdAndUpdate(
-      req.params.id,
-      userData,
-      {
-        new: true,
-      }
-    );
-  
-    if (!user) {
-        res.status(400).json({ error: 'user not found' });
-    }
-    else{
-        res.status(200).json({ data: user });
-    }
-  });
 
+exports.updateUserProfile = asyncHandler(async (req, res, next) => {
+  const updatedUser = await User.findByIdAndUpdate(
+    req.user.id,
+    {
+      name: req.body.name,
+      email: req.body.email,
+      phone: req.body.phone,
+      image: req.body.image,
+    },
+    { new: true }
+  );
+
+  res.status(200).json({ data: updatedUser });
+});
 
   exports.updateUserPassword = asyncHandler( async (req, res, next) => {
-    const userData = req.body;
-    const user = await User.findOne({ _id: req.params.id });
+    let {password, newPassword} = req.body;
+    const user = await User.findOne({ _id: req.user.id });
 
     if(user)
     {
-      let valid = bcrypt.compareSync(userData.password, user.password);
+      let valid = bcrypt.compareSync(password, user.password);
 
         if(valid){
+          try {
             const salt = bcrypt.genSaltSync(10);
-            const hashedPassword = bcrypt.hashSync(userData.newPassword, salt);
-            userData.newPassword = hashedPassword;
+            const hashedPassword = bcrypt.hashSync(newPassword, salt);
+            newPassword = hashedPassword;
             const user = await User.findByIdAndUpdate(
-              req.params.id,
-              {password:userData.newPassword},
+              req.user.id,
+              {password:newPassword},
               {
                 new: true,
               }
             );
     
             res.status(200).json({ data: user });
+          } catch (error) {
+            console.log(error);
+            res.status(400).send("server error");
+          }
+            
         }
         else{
           res.status(400).json({ error: 'password not match' });
@@ -67,8 +71,19 @@ exports.updateUser = asyncHandler( async (req, res, next) => {
 
   });
 
-// 640cf1098a7d420a836ddfc7
-//   eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDBjZWVkY2YxOGMxMDJkYTdlZjRiNjUiLCJ1c2VyUm9sZSI6InVzZXIiLCJpYXQiOjE2Nzg1NjkxOTUsImV4cCI6MTY3ODYxMjM5NX0.3vKyRCDFDpQN1L-nY4z0eKHSE2jnLb5URUjkaI7rXfs
+// 640f2bdd4f6e4a1982bed4f5
+//  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDBmMmJkZDRmNmU0YTE5ODJiZWQ0ZjUiLCJ1c2VyUm9sZSI6InVzZXIiLCJpYXQiOjE2Nzg3MTY0MzgsImV4cCI6MTY3ODc1OTYzOH0.f0M1Iar-3h_VScWptF3CKlPoSw0Pq_52t39asfMvHNo 
+
+exports.register = asyncHandler( async (req, res) => {
+  let { name, email, password } = req.body
+  const newUser = await User.create({
+    name,
+    email,
+    password,
+  });
+  res.status(201).json({ data: newUser });
+});
+
 
 exports.login = asyncHandler( async (req, res) => {
 
@@ -91,4 +106,11 @@ exports.login = asyncHandler( async (req, res) => {
       res.status(401).json({ message: "user not found" })
     }
   
+  });
+
+
+  exports.deactivateUser = asyncHandler(async (req, res, next) => {
+    await User.findByIdAndUpdate(req.user.id, { isActive: false });
+  
+    res.status(200).send('deactivate user Success');
   });
