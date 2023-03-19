@@ -69,7 +69,7 @@ exports.updateUserValidator = [
     body('email')
       .optional() 
       .isEmail()
-      .withMessage('Invalid fffemail address')
+      .withMessage('Invalid email address')
       .custom((val) =>
         User.findOne({ email: val }).then((user) => {
           if (user) {
@@ -102,6 +102,24 @@ exports.changeUserPasswordValidator = [
     validatorMiddleware,
   ];
 
+
+  exports.forgotPasswordValidator = [
+    body('confirmNewPassword')
+      .notEmpty()
+      .withMessage('You must enter the confirm new password'),
+    body('newPassword')
+      .notEmpty()
+      .withMessage('You must enter new password')
+      .isLength({ min: 8 })
+      .withMessage('Password must be at least 8 characters')
+      .custom(async (password, { req }) => {  
+        if (password !== req.body.confirmNewPassword) {
+            throw new Error('invalid Password Confirm');
+          }
+          return true;
+      }),
+    validatorMiddleware,
+  ];
 
 exports.getUserValidator = [
     check('id').isMongoId().withMessage('Invalid User id format'),

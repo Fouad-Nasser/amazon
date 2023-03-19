@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-const { auth, userProtect } = require('../middlewares/auth')
+const reviewsRoute = require('./review');
+const { auth, canAccess } = require('../middlewares/auth')
 
 const {
   getProducts,
@@ -13,20 +14,23 @@ const {
 
 
 
+router.get('/', getProducts);
+router.use('/:productId/reviews', reviewsRoute);
 
-router.use(auth);
-router.post('/', createProduct);
-
-
-// router.use('/:id', userProtect);
 router
   .route('/:id')
-  .get(getProduct)
+  .get(getProduct);
+
+
+router.use(auth);
+
+router.post('/', createProduct);
+router
+  .route('/:id')
   .put(updateProduct)
   .delete(deleteProduct);
 
 
-router.get('/', getProducts);
 
 
 module.exports = router;

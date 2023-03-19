@@ -1,32 +1,30 @@
 const express = require('express');
 const router = express.Router();
 
-const { auth, userProtect } = require('../middlewares/auth')
+const { auth, canAccess } = require('../middlewares/auth')
 
 const {
   getReviews,
   getReview,
   createReview,
   updateReview,
-  deleteReview
+  deleteReview,
+  createFilterObj
 } = require('../controllers/review');
 
 
+
+router.get('/', createFilterObj, getReviews);
 
 
 router.use(auth);
 router.post('/', createReview);
 
-
-// router.use('/:id', userProtect);
 router
   .route('/:id')
   .get(getReview)
   .put(updateReview)
   .delete(deleteReview);
-
-
-router.get('/', getReviews);
 
 
 module.exports = router;

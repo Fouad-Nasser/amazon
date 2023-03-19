@@ -17,8 +17,6 @@ const {
 router.use(auth);
 router.post('/', createOrder);
 
-
-// router.use('/:id', userProtect);
 router
   .route('/:id')
   .get(getOrder)

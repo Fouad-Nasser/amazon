@@ -38,19 +38,18 @@ const productsSchema = moongose.Schema({
     },
     categoryID: {
         type: moongose.SchemaTypes.ObjectId,
-        ref: 'categories'
+        ref: 'categories',
+        required:true
     },
     subCategoryID: {
         type: moongose.SchemaTypes.ObjectId,
-        ref: 'subCategory'
+        ref: 'subCategory',
+        required:true
     },
-    admin: {
+    saller: {
         type: moongose.SchemaTypes.ObjectId,
-        ref: 'admin'
-    },
-    reviews: {
-        type: moongose.SchemaTypes.ObjectId,
-        ref: 'reviews'
+        ref: 'user',
+        required:true
     }
 
 

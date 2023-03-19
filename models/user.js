@@ -16,12 +16,17 @@ const userSchema = new mongoose.Schema(
       },
       phone: String,
       image: String,
-  
+      verifyEmailCode:{
+        type: String,
+      },
       password: {
         type: String,
         required: [true, 'password required'],
         minlength: [6, 'Too short password'],
       },
+      passwordResetCode: String,
+      passwordResetExpires: Date,
+      passwordResetVerified: Boolean,
       role: {
         type: String,
         enum: ['user', 'manager', 'admin'],
@@ -29,7 +34,7 @@ const userSchema = new mongoose.Schema(
       },
       isActive: {
         type: Boolean,
-        default: true,
+        default: false,
       },
       wishlist: [
         {

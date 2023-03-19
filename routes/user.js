@@ -9,7 +9,8 @@ const {
   loginValidator,
   updateUserValidator,
   changeUserPasswordValidator,
-  getUserValidator
+  getUserValidator,
+  forgotPasswordValidator
 } = require('../validations/userValidations');
 
 
@@ -24,20 +25,30 @@ const {
   deleteUser,
   deactivateUser,
   login,
-  register
+  register,
+  verifyEmail,
+  forgotPassword,
+  verifyResetCode,
+  resetPassword
 } = require('../controllers/user');
 
 
 
 router.post('/register', createUserValidator, register);
+router.post('/verify_email', verifyEmail);
 router.post('/login', loginValidator, login);
+router.post('/forgot_password', forgotPassword);
+router.post('/verify_reset_code', verifyResetCode);
+router.post('/reset_password', forgotPasswordValidator, resetPassword);
+
+
 
 
 router.use(auth);
 router.get('/user_data', setUserId, getUserValidator, getUser);
 router.put('/update_profile', updateUserValidator, updateUserProfile);
 router.put('/change_password', changeUserPasswordValidator, updateUserPassword);
-router.put('/deactivate_user', deactivateUser)
+router.put('/deactivate_user', deactivateUser);
 
 
 
