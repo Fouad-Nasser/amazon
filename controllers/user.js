@@ -17,6 +17,17 @@ exports.updateUser = factory.updateOne(User);
 exports.deleteUser = factory.deleteOne(User);
 
 
+exports.userData = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id).select('-__v -password')
+  if(user){
+    res.status(200).json({ data: user });
+  }else{
+    res.status(401).json({ msg: 'user not found' });
+
+  }
+});
+
+
 
 exports.updateUserProfile = asyncHandler(async (req, res, next) => {
   const updatedUser = await User.findByIdAndUpdate(
@@ -62,7 +73,7 @@ exports.updateUserProfile = asyncHandler(async (req, res, next) => {
             
         }
         else{
-          res.status(400).json({ error: 'password not match' });
+          res.status(400).json({ error: 'invalid password' });
         }
     }
     else{
@@ -78,6 +89,7 @@ exports.register = asyncHandler( async (req, res) => {
   const { name, email, password } = req.body;
   const verifyEmailCode = Math.floor(Math.random()  * 1000000).toString();
 
+  console.log(password);
   const newUser = await User.create({
     name,
     email,
@@ -130,7 +142,7 @@ exports.verifyEmail = asyncHandler(async (req, res, next) => {
 
 
 exports.forgotPassword = asyncHandler(async (req, res, next) => {
-  const {email, verifyEmailCode} = req.body;
+  const {email} = req.body;
   const user = await User.findOne({ email });
 
   if(user){
@@ -222,10 +234,10 @@ exports.login = asyncHandler( async (req, res) => {
 
     let { email, password } = req.body
     const user = await User.findOne({ email })
+
     if (user && user.isActive) {
-      let valid = bcrypt.compareSync(password, user.password);
+      let valid = await bcrypt.compare(password, user.password);
       if (valid) {
-  
         const token = jwt.sign({
           userId: user._id,
           userRole: user.role

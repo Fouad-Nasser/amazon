@@ -14,7 +14,7 @@ exports.deleteReview = factory.deleteOne(Review);
 
 exports.updateReview = factory.updateOne(Review);
 
-exports.createFilterObj = (req, res, next) => {
+exports.setFilterObj = (req, res, next) => {
     if (req.params.productId){
         let filterObject = { product: req.params.productId };
         req.filterObj = filterObject;

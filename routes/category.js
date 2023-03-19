@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const { auth, userProtect } = require('../middlewares/auth')
+const subCategoryRoute = require('./subCategory');
+
+const { auth, canAccess } = require('../middlewares/auth')
 
 const {
   getCategorys,
@@ -13,20 +15,19 @@ const {
 
 
 
+router.get('/', getCategorys);
+router.get('/:id',getCategory);
+router.use('/:categoryId/subcategories', subCategoryRoute);
+
 
 router.use(auth);
+router.use(canAccess(["admin","saller"]));
+
 router.post('/', createCategory);
-
-
-// router.use('/:id', userProtect);
 router
   .route('/:id')
-  .get(getCategory)
   .put(updateCategory)
   .delete(deleteCategory);
-
-
-router.get('/', getCategorys);
 
 
 module.exports = router;

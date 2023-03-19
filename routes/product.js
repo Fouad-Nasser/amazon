@@ -17,12 +17,11 @@ const {
 router.get('/', getProducts);
 router.use('/:productId/reviews', reviewsRoute);
 
-router
-  .route('/:id')
-  .get(getProduct);
+router.get("/:id",getProduct);
 
 
 router.use(auth);
+router.use(canAccess(["admin","saller"]));
 
 router.post('/', createProduct);
 router

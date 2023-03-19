@@ -4,16 +4,17 @@ const ApiOptions = require('./apiOptions');
 exports.deleteOne = (Model) => asyncHandler( async (req, res, next) => {
     const { id } = req.params;
     const document = await Model.findByIdAndDelete(id);
-
-    res.status(204).send();
+    if(document){
+      res.status(201).send({msg:'deleted successfully'});
+    }
+    else{
+      res.status(401).send('id not found');
+    }
   });
 
 exports.updateOne = (Model) => asyncHandler( async (req, res, next) => {
-    const document = await Model.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
+    const document = await Model.findByIdAndUpdate(req.params.id, req.body, {new: true});
 
-    document.save();
     res.status(200).json({ data: document });
   });
 
@@ -37,7 +38,7 @@ exports.getOne = (Model, populationOpt) => asyncHandler( async (req, res, next) 
   });
 
 exports.getAll = (Model, modelName = '') => asyncHandler( async (req, res) => {
-    let filter = {};
+    let filter;
     if (req.filterObj) {
       filter = req.filterObj;
     }

@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema(
       password: {
         type: String,
         required: [true, 'password required'],
-        minlength: [6, 'Too short password'],
+        minlength: [8, 'Too short password'],
       },
       passwordResetCode: String,
       passwordResetExpires: Date,
@@ -49,9 +49,11 @@ const userSchema = new mongoose.Schema(
 
 
 userSchema.pre('save', function (next) {
-  const salt = bcrypt.genSaltSync(10);
-  const hashedPassword = bcrypt.hashSync(this.password, salt);
-  this.password = hashedPassword
+  if(this.isModified('password')){
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(this.password, salt);
+    this.password = hashedPassword
+  }
   next()
   
 })

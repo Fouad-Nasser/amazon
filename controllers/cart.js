@@ -104,5 +104,5 @@ exports.addProductToCart = asyncHandler(async (req, res) => {
 
   exports.clearCart = asyncHandler(async (req, res) => {
     await Cart.findOneAndDelete({ user: req.user._id });
-    res.status(204).send();
+    res.status(204).json({msg:"cart deleted successfully"});
   });

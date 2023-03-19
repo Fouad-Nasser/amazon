@@ -1,32 +1,33 @@
 const express = require('express');
-const router = express.Router();
+const router = express.Router({mergeParams:true});
 
-const { auth, userProtect } = require('../middlewares/auth')
+const { auth, canAccess } = require('../middlewares/auth')
 
 const {
   getSubCategorys,
   getSubCategory,
   createSubCategory,
   updateSubCategory,
-  deleteSubCategory
+  deleteSubCategory,
+  setFilterObj
 } = require('../controllers/SubCategory');
 
 
 
+router.get('/', setFilterObj, getSubCategorys);
+router.get('/:id',getSubCategory);
+
+
 
 router.use(auth);
+router.use(canAccess(["admin","saller"]));
+
 router.post('/', createSubCategory);
-
-
-// router.use('/:id', userProtect);
 router
   .route('/:id')
-  .get(getSubCategory)
   .put(updateSubCategory)
   .delete(deleteSubCategory);
 
-
-router.get('/', getSubCategorys);
 
 
 module.exports = router;

@@ -47,13 +47,15 @@ class ApiOptions {
             { description: { $regex: this.queryString.keyword, $options: 'i' } },
           ];
         } else {
-          query = { name: { $regex: this.queryString.keyword, $options: 'i' } };
+
+          query = { 'name' : { '$regex' : this.queryString.keyword, '$options' : 'i' } };
         }
   
         this.mongooseQuery = this.mongooseQuery.find(query);
       }
       return this;
     }
+  
   
     paginate(countDocuments) {
       const page = this.queryString.page * 1 || 1;

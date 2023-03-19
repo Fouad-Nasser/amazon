@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { auth, canAccess } = require('../middlewares/auth')
+const { auth } = require('../middlewares/auth')
 
 const {
   getReviews,
@@ -9,12 +9,12 @@ const {
   createReview,
   updateReview,
   deleteReview,
-  createFilterObj
+  setFilterObj
 } = require('../controllers/review');
 
 
 
-router.get('/', createFilterObj, getReviews);
+router.get('/', setFilterObj, getReviews);
 
 
 router.use(auth);

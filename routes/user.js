@@ -29,7 +29,8 @@ const {
   verifyEmail,
   forgotPassword,
   verifyResetCode,
-  resetPassword
+  resetPassword,
+  userData
 } = require('../controllers/user');
 
 
@@ -39,16 +40,16 @@ router.post('/verify_email', verifyEmail);
 router.post('/login', loginValidator, login);
 router.post('/forgot_password', forgotPassword);
 router.post('/verify_reset_code', verifyResetCode);
-router.post('/reset_password', forgotPasswordValidator, resetPassword);
+router.put('/reset_password', forgotPasswordValidator, resetPassword);
 
 
 
 
 router.use(auth);
-router.get('/user_data', setUserId, getUserValidator, getUser);
+router.get('/user_data', userData);
 router.put('/update_profile', updateUserValidator, updateUserProfile);
 router.put('/change_password', changeUserPasswordValidator, updateUserPassword);
-router.put('/deactivate_user', deactivateUser);
+router.delete('/deactivate_user', deactivateUser);
 
 
 
