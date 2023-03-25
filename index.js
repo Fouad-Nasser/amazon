@@ -54,9 +54,9 @@ app.all('*', (req, res, next) => {
 });
 
 
-// app.use((err, req, res, next)=>{
-//     res.status(400).json({err});
-// })
+app.use((err, req, res, next)=>{
+    res.status(400).json({err});
+})
 
 
 app.listen(port,()=>{

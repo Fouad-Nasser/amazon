@@ -92,7 +92,6 @@ exports.addProductToCart = asyncHandler(async (req, res) => {
       { new: true }
     );
   
-// console.log(cart);  
     res.status(200).json({
       status: 'success',
       numOfCartItems: cart.cartItems.length,

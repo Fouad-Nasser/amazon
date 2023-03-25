@@ -29,11 +29,6 @@ function auth(req, res, next) {
 }
 
 
-function setUserId(req, res, next){
-    req.params.id = req.user.id;
-    console.log(req.params.id);
-    next();
-  };
 
 
 function canAccess(roles){
