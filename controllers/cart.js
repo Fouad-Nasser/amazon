@@ -29,7 +29,7 @@ exports.addProductToCart = asyncHandler(async (req, res) => {
         }
         else{
             cart = await Cart.create({
-                user: req.user._id,
+                user: req.user.id,
                 cartItems: [{ product: productId, color, price: product.price }],
               });
         }
@@ -92,8 +92,7 @@ exports.addProductToCart = asyncHandler(async (req, res) => {
       { new: true }
     );
   
-    cart.save();
-  
+// console.log(cart);  
     res.status(200).json({
       status: 'success',
       numOfCartItems: cart.cartItems.length,
@@ -103,6 +102,6 @@ exports.addProductToCart = asyncHandler(async (req, res) => {
 
 
   exports.clearCart = asyncHandler(async (req, res) => {
-    await Cart.findOneAndDelete({ user: req.user._id });
-    res.status(204).json({msg:"cart deleted successfully"});
+    await Cart.findOneAndDelete({ user: req.user.id });
+    res.status(200).json({msg:'cart deleted successfully'});
   });

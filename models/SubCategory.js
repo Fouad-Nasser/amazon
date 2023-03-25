@@ -9,9 +9,9 @@ var SunCategorySchema = mongoose.Schema({
     image: {
         type: String,
     },
-    CategoryID: {
+    category: {
         type: mongoose.SchemaTypes.ObjectId,
-        ref: 'Category',
+        ref: 'category',
         required: true
     }
 }, { timestamps: true })

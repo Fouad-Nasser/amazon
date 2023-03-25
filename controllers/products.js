@@ -3,7 +3,6 @@ const factory = require('../utils/crudBuilder');
 
 
 
-
 exports.getProducts = factory.getAll(Product);
 
 exports.getProduct = factory.getOne(Product);

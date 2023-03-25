@@ -4,7 +4,7 @@ const factory = require('../utils/crudBuilder');
 
 exports.getSubCategorys = factory.getAll(SubCategoryModel);
 
-exports.getSubCategory = factory.getOne(SubCategoryModel);
+exports.getSubCategory = factory.getOne(SubCategoryModel,'category');
 
 exports.createSubCategory = factory.createOne(SubCategoryModel);
 

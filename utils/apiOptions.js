@@ -6,7 +6,7 @@ class ApiOptions {
   
     filter() {
       const queryStringObj = { ...this.queryString };
-      const excludesFields = ['page', 'sort', 'limit', 'fields'];
+      const excludesFields = ['page', 'sort', 'limit', 'fields', 'keyword'];
       excludesFields.forEach((field) => delete queryStringObj[field]);
       
       // Enable filtration using > < 
@@ -23,7 +23,7 @@ class ApiOptions {
         const sortBy = this.queryString.sort.split(',').join(' ');
         this.mongooseQuery = this.mongooseQuery.sort(sortBy);
       } else {
-        this.mongooseQuery = this.mongooseQuery.sort('-createAt');
+        this.mongooseQuery = this.mongooseQuery.sort('-createdAt');
       }
       return this;
     }
@@ -43,14 +43,14 @@ class ApiOptions {
         let query = {};
         if (modelName === 'Products') {
           query.$or = [
-            { title: { $regex: this.queryString.keyword, $options: 'i' } },
+            { name: { $regex: this.queryString.keyword, $options: 'i' } },
             { description: { $regex: this.queryString.keyword, $options: 'i' } },
           ];
         } else {
-
-          query = { 'name' : { '$regex' : this.queryString.keyword, '$options' : 'i' } };
+          query = { name: { $regex: this.queryString.keyword, $options: 'i' } };
         }
   
+        console.log(query);
         this.mongooseQuery = this.mongooseQuery.find(query);
       }
       return this;
@@ -59,7 +59,7 @@ class ApiOptions {
   
     paginate(countDocuments) {
       const page = this.queryString.page * 1 || 1;
-      const limit = this.queryString.limit * 1 || 50;
+      const limit = this.queryString.limit * 1 || 20;
       const skip = (page - 1) * limit;
       const endIndex = page * limit;
   
@@ -76,6 +76,7 @@ class ApiOptions {
       if (skip > 0) {
         pagination.prev = page - 1;
       }
+      
       this.mongooseQuery = this.mongooseQuery.skip(skip).limit(limit);
   
       this.paginationResult = pagination;

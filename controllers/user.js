@@ -203,11 +203,7 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
     const user = await User.findOne({ email })
     if (user && user.isActive) {
       if (user.passwordResetVerified) {
-
-        const salt = bcrypt.genSaltSync(10);
-        const hashedPassword = bcrypt.hashSync(newPassword, salt);
-
-        user.password = hashedPassword
+        user.password = newPassword
         user.passwordResetCode = ''
         user.passwordResetExpires = null;
         user.passwordResetVerified = false;

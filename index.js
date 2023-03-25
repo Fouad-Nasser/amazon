@@ -12,6 +12,9 @@ const dbConnection = require('./config/db');
 const port = process.env.PORT || 5000;
 const environment = process.env.ENVIRONMENT || 'development';
 
+dbConnection();
+
+
 const userRouter = require('./routes/user');
 const reviewRouter = require('./routes/review');
 const cartRouter = require('./routes/cart');
@@ -22,8 +25,6 @@ const OrderRouter = require('./routes/order');
 
 
 
-
-dbConnection();
 
 app.use(cors());
 app.use(express.json());
@@ -53,9 +54,9 @@ app.all('*', (req, res, next) => {
 });
 
 
-app.use((err, req, res, next)=>{
-    res.status(400).json({err});
-})
+// app.use((err, req, res, next)=>{
+//     res.status(400).json({err});
+// })
 
 
 app.listen(port,()=>{
