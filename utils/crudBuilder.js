@@ -18,10 +18,18 @@ exports.updateOne = (Model) => asyncHandler( async (req, res, next) => {
     res.status(200).json({ data: document });
   });
 
-exports.createOne = (Model) => asyncHandler( async (req, res) => {
-    const newDoc = await Model.create(req.body);
-    res.status(201).json({ data: newDoc });
-  });
+
+exports.createOne = (Model,populationOpt) => asyncHandler( async (req, res) => {
+  let newDoc = await Model.create(req.body)
+  console.log(newDoc);
+  if (populationOpt) {
+    newDoc = await newDoc.populate(populationOpt);
+  console.log('ddd',newDoc);
+
+  }
+  res.status(201).json({ data: newDoc });
+});
+  
 
 exports.getOne = (Model, populationOpt) => asyncHandler( async (req, res, next) => {
     const { id } = req.params;
@@ -37,25 +45,29 @@ exports.getOne = (Model, populationOpt) => asyncHandler( async (req, res, next) 
     res.status(200).json({ data: document });
   });
 
-exports.getAll = (Model, modelName = '') => asyncHandler( async (req, res) => {
-  let filter = {};
-  if (req.filterObj) {
-    filter = req.filterObj;
-  }
-  // Build query
-  const documentsCounts = await Model.countDocuments();
-  const apiFeatures = new ApiOptions(Model.find(filter), req.query)
-    .paginate(documentsCounts)
-    .filter()
-    .search(modelName)
-    .limitFields()
-    .sort();
+  exports.getAll = (Model, populationOpt, modelName = '') => asyncHandler( async (req, res) => {
+    let filter = {};
+    if (req.filterObj) {
+      filter = req.filterObj;
+    }
+    // Build query
+    const documentsCounts = await Model.countDocuments();
+    let query = Model.find(filter);
+    if (populationOpt) {
+      query = query.populate(populationOpt);
+    }
+    const apiOptions = new ApiOptions(query, req.query)
+      .paginate(documentsCounts)
+      .filter()
+      .search(modelName)
+      .limitFields()
+      .sort();
 
-  // Execute query
-  const { mongooseQuery, paginationResult } = apiFeatures;
-  const documents = await mongooseQuery;
+    // Execute query
+    const { mongooseQuery, paginationResult } = apiOptions;
+    const documents = await mongooseQuery;
 
-  res
-    .status(200)
-    .json({ results: documents.length, paginationResult, data: documents });
+    res
+      .status(200)
+      .json({ results: documents.length, paginationResult, data: documents });
   });

@@ -45,4 +45,4 @@ function canAccess(roles){
 }
 
 
-module.exports = { auth, setUserId, canAccess}
+module.exports = { auth, canAccess}

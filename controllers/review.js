@@ -4,11 +4,11 @@ const factory = require('../utils/crudBuilder');
 
 
 
-exports.getReviews = factory.getAll(Review);
+exports.getReviews = factory.getAll(Review,{ path: 'user', select: 'name image' });
 
 exports.getReview = factory.getOne(Review);
 
-exports.createReview = factory.createOne(Review);
+exports.createReview = factory.createOne(Review,{ path: 'user', select: 'name image' });
 
 exports.deleteReview = factory.deleteOne(Review);
 
