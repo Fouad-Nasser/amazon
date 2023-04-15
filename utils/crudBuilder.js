@@ -51,23 +51,33 @@ exports.getOne = (Model, populationOpt) => asyncHandler( async (req, res, next) 
       filter = req.filterObj;
     }
     // Build query
-    const documentsCounts = await Model.countDocuments();
+    // const documentsCounts = await Model.countDocuments();
     let query = Model.find(filter);
     if (populationOpt) {
       query = query.populate(populationOpt);
     }
     const apiOptions = new ApiOptions(query, req.query)
-      .paginate(documentsCounts)
       .filter()
       .search(modelName)
       .limitFields()
       .sort();
 
+      let documents = await apiOptions.mongooseQuery;
+      const documentsCounts = documents.length;
+      apiOptions.paginate(documentsCounts)
+
     // Execute query
     const { mongooseQuery, paginationResult } = apiOptions;
-    const documents = await mongooseQuery;
+     documents = await mongooseQuery.clone().exec();
+    // const document = await mongooseQuery;
+
 
     res
       .status(200)
-      .json({ results: documents.length, paginationResult, data: documents });
+      .json({
+         results: documents.length,
+         documentsCounts,
+          paginationResult,
+           data: documents 
+          });
   });
