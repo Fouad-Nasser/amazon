@@ -1,6 +1,5 @@
 const mongoose = require("mongoose")
 const orderSchema = mongoose.Schema(
-    [
         {
             shippingInfo: {
                 address: {
@@ -24,6 +23,10 @@ const orderSchema = mongoose.Schema(
                     required: true
                 }
             },
+            name: {
+                type: String,
+                required: true,
+            },
             user: {
                 type: mongoose.Schema.Types.ObjectId,
                 required: true,
@@ -36,18 +39,11 @@ const orderSchema = mongoose.Schema(
                         ref: 'Product'
                 }
             ],
-            paymentInfo: {
-                id: {
-                    type: String
-                },
-                status: {
-                    type: String
-                }
+            isPaid: {
+                type:Boolean,
+                required:true,
+                default: false
             },
-            paidAt: {
-                type: Date
-            },
-
             itemsPrice: {
                 type: Number,
                 required: true,
@@ -67,17 +63,13 @@ const orderSchema = mongoose.Schema(
             orderStatus: {
                 type: String,
                 required: true,
+                default:"pending"
             },
             deliveredAt: {
-                type: Date
-            },
-            createdAt: {
-                type: Date,
+                type: String
             }
-
-        }
-    ]
-
+        },
+        { timestamps: true }
 )
 
 const orderModel=mongoose.model("order",orderSchema)
