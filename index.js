@@ -1,7 +1,17 @@
 const express = require('express');
 const app = express();
 
+const path = require('path');
 const cors = require('cors');
+const {I18n} = require('i18n');
+
+
+const i18n = new I18n({
+    locales:['en','ar'],
+    directory:path.join(__dirname,'translations'),
+    defaultLocale:'en'
+});
+
 
 const dotenv = require('dotenv');
 dotenv.config();
@@ -28,7 +38,12 @@ const OrderRouter = require('./routes/order');
 
 app.use(cors());
 app.use(express.json());
+app.use(i18n.init);
 
+app.use((req,res,next)=>{
+    i18n.setLocale(req,req.headers['lang']);
+    next();
+});
 
 if (environment === 'development') {
     app.use(morgan('common'));
@@ -36,7 +51,7 @@ if (environment === 'development') {
 
 
 app.get('/',(req,res)=>{
-    res.send('Start API');
+    res.send(res.__('LANG'));
 });
 
 app.use('/users',userRouter);

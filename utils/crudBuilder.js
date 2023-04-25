@@ -12,9 +12,12 @@ exports.deleteOne = (Model) => asyncHandler( async (req, res, next) => {
     }
   });
 
-exports.updateOne = (Model) => asyncHandler( async (req, res, next) => {
-    const document = await Model.findByIdAndUpdate(req.params.id, req.body, {new: true});
-
+exports.updateOne = (Model,populationOpt) => asyncHandler( async (req, res, next) => {
+    let document = await Model.findByIdAndUpdate(req.params.id, req.body, {new: true});
+    if (populationOpt) {
+      document = await document.populate(populationOpt);
+  
+    }
     res.status(200).json({ data: document });
   });
 
@@ -24,28 +27,33 @@ exports.createOne = (Model,populationOpt) => asyncHandler( async (req, res) => {
   console.log(newDoc);
   if (populationOpt) {
     newDoc = await newDoc.populate(populationOpt);
-  console.log('ddd',newDoc);
+  // console.log('ddd',newDoc);
 
   }
   res.status(201).json({ data: newDoc });
 });
   
 
-exports.getOne = (Model, populationOpt) => asyncHandler( async (req, res, next) => {
+exports.getOne = (Model, selectobj, populationOpt) => asyncHandler( async (req, res, next) => {
     const { id } = req.params;
     // Set query
-    let query = Model.findById(id);
+    let query = Model.findById(id)
+
+    if (selectobj) {
+      query = query.select(selectobj(res.__('LANG')));
+    }
+
     if (populationOpt) {
       query = query.populate(populationOpt);
     }
 
     // Execute query
     const document = await query;
-
+console.log(document.fullName,'ddddddddddd');
     res.status(200).json({ data: document });
   });
 
-  exports.getAll = (Model, populationOpt, modelName = '') => asyncHandler( async (req, res) => {
+  exports.getAll = (Model, selectobj, populationOpt, modelName = '') => asyncHandler( async (req, res) => {
     let filter = {};
     if (req.filterObj) {
       filter = req.filterObj;
@@ -53,6 +61,13 @@ exports.getOne = (Model, populationOpt) => asyncHandler( async (req, res, next) 
     // Build query
     // const documentsCounts = await Model.countDocuments();
     let query = Model.find(filter);
+
+    console.log(selectobj,"hhhhhhhhhhhhhhhhhhhh");
+
+    if (selectobj) {
+      query = query.select(selectobj(res.__('LANG')));
+    }
+
     if (populationOpt) {
       query = query.populate(populationOpt);
     }

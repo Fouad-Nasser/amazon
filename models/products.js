@@ -2,11 +2,15 @@ const moongose = require('mongoose')
 
 const productsSchema = moongose.Schema({
 
-    name: {
+    name_en: {
         type: String,
-        required: [true, 'product name is required '],
-        maxLength: [60, 'Product name cannot exceed 100 characters'],
-        minLength: 1
+        required: true,
+        trim: true
+    },
+    name_ar: {
+        type: String,
+        required: true,
+        trim: true
     },
     price: {
         type: Number,
@@ -15,7 +19,11 @@ const productsSchema = moongose.Schema({
         minLength: 1
 
     },
-    description: {
+    description_en: {
+        type: String,
+        required: [true, 'Please enter product description'],
+    },
+    description_ar: {
         type: String,
         required: [true, 'Please enter product description'],
     },
@@ -38,7 +46,7 @@ const productsSchema = moongose.Schema({
     },
     categoryID: {
         type: moongose.SchemaTypes.ObjectId,
-        ref: 'categories',
+        ref: 'category',
         required:true
     },
     subCategoryID: {

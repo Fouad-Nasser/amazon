@@ -1,10 +1,17 @@
 var mongoose = require('mongoose');
 
 var SunCategorySchema = mongoose.Schema({
-    name: {
+    name_en: {
         type: String,
         required: true,
         unique: true,
+        trim: true
+    },
+    name_ar: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true
     },
     image: {
         type: String,

@@ -1,10 +1,17 @@
 const SubCategoryModel = require('../models/SubCategory')
 const factory = require('../utils/crudBuilder');
 
+const selectobj = (lang)=>{
+    return{
+        name:`$name_${lang}`,
+        image:1
+    }
+}
 
-exports.getSubCategorys = factory.getAll(SubCategoryModel);
 
-exports.getSubCategory = factory.getOne(SubCategoryModel,'category');
+exports.getSubCategorys = factory.getAll(SubCategoryModel, selectobj);
+
+exports.getSubCategory = factory.getOne(SubCategoryModel, selectobj, 'category');
 
 exports.createSubCategory = factory.createOne(SubCategoryModel);
 
