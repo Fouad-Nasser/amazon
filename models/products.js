@@ -44,6 +44,9 @@ const productsSchema = moongose.Schema({
         type: Number,
         required: [true, 'Please enter product stock'],
     },
+    discount: {
+        type: Number,
+    },
     categoryID: {
         type: moongose.SchemaTypes.ObjectId,
         ref: 'category',

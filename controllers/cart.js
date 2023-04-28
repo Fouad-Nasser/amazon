@@ -5,7 +5,7 @@ const asyncHandler = require('express-async-handler');
 
 
 exports.addProductToCart = asyncHandler(async (req, res) => {
-    const { productId, color } = req.body;
+    const { productId, color, name, image, quantity, instock, price } = req.body;
     const product = await Product.findById(productId);
 
     if(!product){
@@ -16,13 +16,13 @@ exports.addProductToCart = asyncHandler(async (req, res) => {
 
         if(cart){
             const productIndex = cart.cartItems
-            .findIndex(item => item.product.toString() === productId && item.color === color);
+            .findIndex(item => item.productId.toString() === productId );
 
             if(productIndex>-1){
-                cart.cartItems[productIndex].quantity++;
+                cart.cartItems[productIndex].quantity=quantity;
             }
             else{
-                cart.cartItems.push({ product: productId, color, price: product.price });
+                cart.cartItems.push({ productId, color, name, image, quantity, instock, price });
             }
             cart.save();
 
@@ -30,7 +30,7 @@ exports.addProductToCart = asyncHandler(async (req, res) => {
         else{
             cart = await Cart.create({
                 user: req.user.id,
-                cartItems: [{ product: productId, color, price: product.price }],
+                cartItems: [{ productId, color, name, image, quantity, instock, price }],
               });
         }
 
@@ -87,7 +87,7 @@ exports.addProductToCart = asyncHandler(async (req, res) => {
     const cart = await Cart.findOneAndUpdate(
       { user: req.user.id },
       {
-        $pull: { cartItems: { _id: req.params.itemId } },
+        $pull: { cartItems: { productId: req.params.itemId } },
       },
       { new: true }
     );
