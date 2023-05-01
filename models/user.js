@@ -17,9 +17,7 @@ const userSchema = new mongoose.Schema(
     address: {
       type: Object,
     },
-    phone: [
-      Number
-    ],
+    phone: String,
     image: String,
     verifyEmailCode: {
       type: String,

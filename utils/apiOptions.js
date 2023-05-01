@@ -38,13 +38,17 @@ class ApiOptions {
       return this;
     }
   
-    search(modelName) {
+    search(modelName,ln) {
       if (this.queryString.keyword) {
         let query = {};
         if (modelName === 'Products') {
+          let obj={}, obj1={};
+          obj[`name_${ln}`]={ $regex: this.queryString.keyword, $options: 'i' };
+          obj1[`description_${ln}`]={ $regex: this.queryString.keyword, $options: 'i' };
+
           query.$or = [
-            { name: { $regex: this.queryString.keyword, $options: 'i' } },
-            { description: { $regex: this.queryString.keyword, $options: 'i' } },
+            obj,
+            obj1
           ];
         } else {
           query = { name: { $regex: this.queryString.keyword, $options: 'i' } };

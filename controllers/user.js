@@ -86,14 +86,17 @@ exports.updateUserProfile = asyncHandler(async (req, res, next) => {
 //  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDBmMmJkZDRmNmU0YTE5ODJiZWQ0ZjUiLCJ1c2VyUm9sZSI6InVzZXIiLCJpYXQiOjE2Nzg3MTY0MzgsImV4cCI6MTY3ODc1OTYzOH0.f0M1Iar-3h_VScWptF3CKlPoSw0Pq_52t39asfMvHNo 
 
 exports.register = asyncHandler( async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
   const verifyEmailCode = Math.floor(Math.random()  * 1000000).toString();
 
-  console.log(password);
+  role = role==='seller'?'seller':'user';
+
+  // console.log(password);
   const newUser = await User.create({
     name,
     email,
     password,
+    role,
     verifyEmailCode
   });
   

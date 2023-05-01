@@ -18,7 +18,7 @@ const selectobj = (lang)=>{
 }
 
 
-exports.getProducts = factory.getAll(Product, selectobj, { path: 'categoryID', select: {name:"$name"} });
+exports.getProducts = factory.getAll(Product, selectobj, { path: 'categoryID', select: {name:"$name"} },'Products');
 
 exports.getProduct = factory.getOne(Product, selectobj);
 

@@ -73,7 +73,7 @@ console.log(document.fullName,'ddddddddddd');
     }
     const apiOptions = new ApiOptions(query, req.query)
       .filter()
-      .search(modelName)
+      .search(modelName,res.__('LANG'))
       .limitFields()
       .sort();
 

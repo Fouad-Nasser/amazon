@@ -43,6 +43,12 @@ const productsSchema = moongose.Schema({
     instock: {
         type: Number,
         required: [true, 'Please enter product stock'],
+        default:1
+    },
+    sales: {
+        type: Number,
+        required: [true, 'Please enter product stock'],
+        default:0
     },
     discount: {
         type: Number,
@@ -57,7 +63,7 @@ const productsSchema = moongose.Schema({
         ref: 'subCategory',
         required:true
     },
-    saller: {
+    seller: {
         type: moongose.SchemaTypes.ObjectId,
         ref: 'user',
         required:true
