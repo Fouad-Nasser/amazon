@@ -21,7 +21,7 @@ exports.updateSubCategory = factory.updateOne(SubCategoryModel);
 
 exports.setFilterObj = (req, res, next) => {
     if (req.params.categoryId){
-        req.filterObj = { CategoryID: req.params.categoryId }; 
+        req.filterObj = { category: req.params.categoryId }; 
     }
     next();
   };

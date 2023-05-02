@@ -47,7 +47,6 @@ const productsSchema = moongose.Schema({
     },
     sales: {
         type: Number,
-        required: [true, 'Please enter product stock'],
         default:0
     },
     discount: {
@@ -65,9 +64,8 @@ const productsSchema = moongose.Schema({
     },
     seller: {
         type: moongose.SchemaTypes.ObjectId,
-        ref: 'user',
-        required:true
-    }
+        ref: 'user'
+        }
 
 
 
