@@ -24,7 +24,7 @@ const environment = process.env.ENVIRONMENT || 'development';
 
 dbConnection();
 
-
+const {statistics} = require('./controllers/statistic')
 const userRouter = require('./routes/user');
 const reviewRouter = require('./routes/review');
 const cartRouter = require('./routes/cart');
@@ -54,6 +54,7 @@ app.get('/',(req,res)=>{
     res.send(res.__('LANG'));
 });
 
+app.get('/statistics',statistics)
 app.use('/users',userRouter);
 app.use('/reviews',reviewRouter);
 app.use('/carts',cartRouter);
@@ -69,9 +70,9 @@ app.all('*', (req, res, next) => {
 });
 
 
-// app.use((err, req, res, next)=>{
-//     res.status(400).json({err});
-// })
+app.use((err, req, res, next)=>{
+    res.status(400).json({err});
+})
 
 
 app.listen(port,()=>{
