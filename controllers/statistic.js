@@ -11,7 +11,7 @@ exports.statistics = asyncHandler(async (req, res, next) => {
 
     const productNums = await Product.find().count();
     const orderNums = await Order.find().count();
-    const topProduct =  await Product.find().select('name_en ratings').sort({ ratings: -1 }).limit(3)
+    const topProduct =  await Product.find().select('name_en ratings').sort({ratings: -1}).limit(3)
   
     res.status(200).json({ data: {
             clintNums,
